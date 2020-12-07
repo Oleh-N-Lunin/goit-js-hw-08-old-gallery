@@ -2,6 +2,10 @@ import galleryItems from "./gallery-items.js";
 
 //ПОИСК ЭЛЕМЕНТОВ
 const galleryList = document.querySelector('ul.js-gallery');
+const modalForm = document.querySelector('div.lightbox');
+const lightBoxRef = document.querySelector('.js-lightbox');
+const lightBoxImage = document.querySelector('lightbox__image');
+const closeBtn = document.querySelector('button[data-action="close-lightbox"]');
 
 // СОЗДАНИЕ РАЗМЕТКИ И ПРИСВОЕНИЕ АТРИБУТОВ
 
@@ -27,4 +31,10 @@ galleryItems.forEach(({ preview, original, description }, index) => {
 
 //МОДАЛЬНОЕ ОКНО
 
-const modalOpen = document.querySelector('div.js-lightbox');
+galleryList.addEventListener('click', event => {
+    event.preventDefault();
+    if (event.target.nodeName !== IMG) {
+        return;
+    };
+        
+});
