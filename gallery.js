@@ -1,40 +1,81 @@
+
 import galleryItems from "./gallery-items.js";
 
-//ПОИСК ЭЛЕМЕНТОВ
-const galleryList = document.querySelector('ul.js-gallery');
-const modalForm = document.querySelector('div.lightbox');
-const lightBoxRef = document.querySelector('.js-lightbox');
-const lightBoxImage = document.querySelector('lightbox__image');
-const closeBtn = document.querySelector('button[data-action="close-lightbox"]');
+//СОЗДАНИЕ РАЗМЕТКИ
 
-// СОЗДАНИЕ РАЗМЕТКИ И ПРИСВОЕНИЕ АТРИБУТОВ
+const galleryRef = document.querySelector('ul.js-gallery');
+const lightboxRef = document.querySelector('.js-lightbox');
+const lightboxImgRef = document.querySelector('.lightbox__image');
+const modalRef = document.querySelector('div.lightbox');
+const btnCloseRef = document.querySelector('button[data-action="close-lightbox"]');
 
-galleryItems.forEach(({ preview, original, description }, index) => {
-    const galleryItem = document.createElement('li');
-    const galleryLink = document.createElement('a');
-    const galleryImage = document.createElement('img');
-    
-    galleryImage.setAttribute('src', preview);
-    galleryLink.setAttribute('href', original)
-    galleryImage.setAttribute('data-source', original);
-    galleryImage.setAttribute('alt', description);
-    galleryImage.setAttribute('daia-index', index)
+galleryItems.forEach(({preview, original, description}, index) => {
 
-    galleryList.appendChild(galleryItem);
-    galleryItem.appendChild(galleryLink);
-    galleryLink.appendChild(galleryImage);
+    const listRef = document.createElement('li');
+    const linkRef = document.createElement('a');
+    const imageRef = document.createElement('img');
 
-    galleryItem.classList.add('gallery__item');
-    galleryLink.classList.add('gallery__link');
-    galleryImage.classList.add('gallery__image');
+    imageRef.setAttribute('src', preview);
+    linkRef.setAttribute('href', original);
+    imageRef.setAttribute('data-source', original);
+    imageRef.setAttribute('alt', description);
+    imageRef.setAttribute('data-id', index);
+
+    galleryRef.append(listRef);
+    listRef.append(linkRef);
+    linkRef.append(imageRef);
+
+    listRef.classList.add('gallery__item');
+    linkRef.classList.add('gallery__link');
+    imageRef.classList.add('gallery__image');
+
 });
 
-//МОДАЛЬНОЕ ОКНО
+// МОДАЛЬНОЕ ОКНО
 
-galleryList.addEventListener('click', event => {
+galleryRef.addEventListener('click', event => {
     event.preventDefault();
-    if (event.target.nodeName !== IMG) {
+    if(event.target.nodeName !== "IMG") {
         return;
-    };
+    }
+    lightboxImgRef.src = event.target.dataset.source;
+    lightboxImgRef.alt = event.target.alt;
+
+    modalRef.classList.add('is-open');
+
+} )
+
+
+function onClickCloseButton(event) {
+    if (event.target.nodeName !== 'BUTTON') {
+        return;
+    }
+    modalRef.classList.remove('is-open');
+    lightboxImgRef.src = "";
+    lightboxImgRef.alt = "";
+};
+
+btnCloseRef.addEventListener('click', onClickCloseButton);
+
+
+function onClickOverlay(event) {
         
-});
+  if (event.target.nodeName !== "DIV") {
+      return;
+  };
+  modalRef.classList.remove('is-open');
+  lightboxImgRef.src = "";
+  lightboxImgRef.alt = "";
+};
+
+modalRef.addEventListener('click', onClickOverlay);
+
+function onClickKeydownEscape(event) { 
+  if (event.code === 'Escape') {
+    modalRef.classList.remove('is-open');
+    lightboxImgRef.src = "";
+    lightboxImgRef.alt = "";
+  }  
+}
+
+window.addEventListener('keydown', onClickKeydownEscape);
